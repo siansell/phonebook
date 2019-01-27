@@ -15,9 +15,12 @@ class App extends Component {
   async componentDidMount() {
     try {
       const response = await axios.get('http://www.mocky.io/v2/581335f71000004204abaf83')
-      const { contacts } = response.data
+      const contactsWithId = response.data.contacts.map((c, i) => ({
+        ...c,
+        id: i,
+      }))
       this.setState({
-        contacts,
+        contacts: contactsWithId,
         isLoaded: true,
       })
     } catch (e) {
@@ -26,8 +29,17 @@ class App extends Component {
         isLoaded: true,
       })
     }
-
   }
+
+  handleDeleteContact = (id) => {
+    this.setState(state => ({
+      contacts: state.contacts.filter(c => c.id !== id),
+    }))
+  }
+
+  handleOpenConfirmDelete = () => this.setState({ isConfirmDeleteOpen: true })
+
+  handleCloseConfirmDelete = () => this.setState({ isConfirmDeleteOpen: false })
 
   render() {
     const { contacts, error, isLoaded } = this.state
@@ -38,7 +50,7 @@ class App extends Component {
         <List bulleted>
           <List.Item>By <a href="https://twitter.com/simon_ansell" target="_blank" rel="noopener noreferrer">Simon Ansell</a> for <a href="https://www.hackajob.co" target="_blank" rel="noopener noreferrer">hackajob</a></List.Item>
           <List.Item>Type in the inputs to filter</List.Item>
-          <List.Item>Mouseover a contact to reveal edit and delete actions, or click on a contact to edit.</List.Item>
+          <List.Item>Mouseover a contact row to reveal edit and delete actions, or click on a contact row to edit.</List.Item>
         </List>
         <Segment loading={!isLoaded}>
           {error && <Message error>Something went wrong: {error}</Message>}
@@ -59,7 +71,13 @@ class App extends Component {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {contacts.map((c, i) => <ContactRow key={i} contact={c} />)}
+                    {contacts.map((c, i) => (
+                      <ContactRow
+                        key={i}
+                        contact={c}
+                        handleDelete={this.handleDeleteContact}
+                      />
+                    ))}
                   </Table.Body>
                 </Table>
               )}
