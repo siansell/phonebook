@@ -5,8 +5,25 @@ import { Icon } from 'semantic-ui-react'
 import FilterInput from './FilterInput'
 
 class ColumnHeader extends Component {
+  handleSortClick = () => {
+    const { field, handleSort } = this.props
+    handleSort(field)
+  }
+
   render() {
-    const { field, handleFilterChange, title } = this.props
+    const { field, handleFilterChange, title, currentSortDirection } = this.props
+
+    let sortIconName
+    switch (currentSortDirection) {
+      case 'ASC':
+        sortIconName = 'sort up'
+        break
+      case 'DESC':
+        sortIconName = 'sort down'
+        break
+      default:
+        sortIconName = 'sort'
+    }
 
     return (
       <div style={{ display: 'flex' }}>
@@ -18,7 +35,13 @@ class ColumnHeader extends Component {
           />
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Icon name="sort" size="large" />
+          <Icon
+            color={currentSortDirection ? 'green': null}
+            name={sortIconName}
+            size="large"
+            style={{ cursor: 'pointer' }}
+            onClick={this.handleSortClick}
+          />
         </div>
       </div>
     )
@@ -26,9 +49,18 @@ class ColumnHeader extends Component {
 }
 
 ColumnHeader.propTypes = {
+  currentSortDirection: PropTypes.oneOf([
+    null,
+    'ASC',
+    'DESC',
+  ]),
   field: PropTypes.string.isRequired,
   handleFilterChange: PropTypes.func.isRequired,
+  handleSort: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
+}
+ColumnHeader.defaultProps = {
+  currentSortDirection: null,
 }
 
 export default ColumnHeader

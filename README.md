@@ -17,13 +17,15 @@ To run in production mode:
 
 Or, use NPM if you prefer :shrug:.
 
-See the full Create React App documentation below.
+Full Create React App README is below the horizontal rule.
 
 ## Possible improvements
 
 - Layout for small screens (mobile) + handle press events
 - Persistent storage
 - Pagination
+- Form validation (add/edit contact)
+- Could use a state management library such as Redux but not necessary for current level of complexity
 
 ## Notes
 

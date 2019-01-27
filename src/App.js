@@ -1,15 +1,17 @@
 import React, { Component } from 'react'
-import { Container, Header, Segment, Message, Table, Button, List } from 'semantic-ui-react'
+import { Container, Segment, Message, Table, Button } from 'semantic-ui-react'
 import axios from 'axios'
 import 'semantic-ui-css/semantic.min.css'
 
-import ColumnHeader from './components/ColumnHeader'
+import AppHeader from './components/AppHeader'
+import AppNotes from './components/AppNotes'
+import AppTitle from './components/AppTitle'
 import ContactRow from './components/ContactRow'
 import TableHeader from './components/TableHeader'
 
 class App extends Component {
   state = {
-    contacts: [],
+    contacts: [], // all contacts, loaded from API
     error: false,
     filters: {
       name: '',
@@ -17,7 +19,8 @@ class App extends Component {
       address: ''
     },
     isLoaded: false,
-    visibleContacts: [],
+    sorts: [], // an array of objects { field, direction }
+    visibleContacts: [], // filtered contacts
   }
 
   componentDidMount() {
@@ -74,25 +77,26 @@ class App extends Component {
     })
   }
 
+  handleSort = (field) => {
+    const { sorts } = this.state
+    console.log(sorts, field)
+  }
+
   render() {
-    const { contacts, visibleContacts, filters, error, isLoaded } = this.state
+    const { contacts, visibleContacts, filters, error, isLoaded, sorts } = this.state
 
     const isFilterActive = Object.keys(filters).some(f => filters[f].length > 0)
 
     return (
       <Container style={{ margin: '1rem' }}>
-        <Header as="h1">Phonebook</Header>
-        <List bulleted>
-          <List.Item>By <a href="https://twitter.com/simon_ansell" target="_blank" rel="noopener noreferrer">Simon Ansell</a> for <a href="https://www.hackajob.co" target="_blank" rel="noopener noreferrer">hackajob</a>.</List.Item>
-          <List.Item>Type in the inputs to filter (min 3 characters).</List.Item>
-          <List.Item>Mouseover a contact row to reveal edit and delete actions, or click on a contact row to edit.</List.Item>
-        </List>
+        <AppTitle />
+        <AppNotes />
         <Segment loading={!isLoaded}>
           {error && <Message error>Something went wrong: {error}</Message>}
           {!error && contacts && (
             <>
               <div style={{ display:'flex', width: '100%' }}>
-                <TableHeader
+                <AppHeader
                   isFilterActive={isFilterActive}
                   nContacts={contacts.length}
                   nVisibleContacts={visibleContacts.length}
@@ -103,32 +107,11 @@ class App extends Component {
               </div>
               {contacts.length > 0 && (
                 <Table selectable stackable size="small" compact>
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.HeaderCell width={3}>
-                        <ColumnHeader
-                          field="name"
-                          handleFilterChange={this.handleFilterChange}
-                          title="Name"
-                        />
-                      </Table.HeaderCell>
-                      <Table.HeaderCell width={2}>
-                        <ColumnHeader
-                          field="phone_number"
-                          handleFilterChange={this.handleFilterChange}
-                          title="Phone"
-                        />
-                      </Table.HeaderCell>
-                      <Table.HeaderCell width={5}>
-                        <ColumnHeader
-                          field="address"
-                          handleFilterChange={this.handleFilterChange}
-                          title="Address"
-                        />
-                      </Table.HeaderCell>
-                      <Table.HeaderCell width={1}>&nbsp;</Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
+                  <TableHeader
+                    handleFilterChange={this.handleFilterChange}
+                    handleSort={this.handleSort}
+                    sorts={sorts}
+                  />
                   {visibleContacts.length > 0 && (
                     <Table.Body>
                       {visibleContacts.map((c, i) => (
