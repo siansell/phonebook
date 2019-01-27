@@ -2,13 +2,13 @@
 
 To run in dev mode:
 
-`yarn install`
+`yarn install`\
 `yarn dev`
 
 To run in production mode
 
-`yarn install`
-`yarn build`
+`yarn install`\
+`yarn build`\
 `yarn start`
 
 Or alternatively see the full Create React App documentation below.
