@@ -57,10 +57,13 @@ class App extends Component {
     }), () => {
       this.setState(state => ({
         visibleContacts: state.contacts.filter(c => {
-          if (state.filters.name.length && !c.name.trim().toLowerCase().includes(state.filters.name)) return false
-          if (state.filters.phone_number.length && !c.phone_number.trim().toLowerCase().includes(state.filters.phone_number)) return false
-          if (state.filters.address.length && !c.address.trim().toLowerCase().includes(state.filters.address)) return false
-          return true
+          let isVisible = true
+          Object.keys(state.filters).forEach(f => {
+            if (state.filters[f].length && !c[f].trim().toLowerCase().includes(state.filters[f])) {
+              isVisible = false
+            }
+          })
+          return isVisible
         })
       }))
     })
@@ -75,7 +78,7 @@ class App extends Component {
       <Container style={{ margin: '1rem' }}>
         <Header as="h1">Phonebook</Header>
         <List bulleted>
-          <List.Item>By <a href="https://twitter.com/simon_ansell" target="_blank" rel="noopener noreferrer">Simon Ansell</a> for <a href="https://www.hackajob.co" target="_blank" rel="noopener noreferrer">hackajob</a></List.Item>
+          <List.Item>By <a href="https://twitter.com/simon_ansell" target="_blank" rel="noopener noreferrer">Simon Ansell</a> for <a href="https://www.hackajob.co" target="_blank" rel="noopener noreferrer">hackajob</a>.</List.Item>
           <List.Item>Type in the inputs to filter (min 3 characters).</List.Item>
           <List.Item>Mouseover a contact row to reveal edit and delete actions, or click on a contact row to edit.</List.Item>
         </List>
@@ -84,41 +87,62 @@ class App extends Component {
           {!error && contacts && (
             <>
               <div style={{ display:'flex', width: '100%' }}>
-                <Header as="h2" style={{ flex: 1 }}>
-                  {contacts.length} contacts
-                  {isFilterActive && <Header.Subheader>({visibleContacts.length} in filter)</Header.Subheader>}
+                <Header as="h2" style={{ flex: 1, marginBottom: 0, minHeight: 50 }}>
+                  {contacts.length} contact
+                  {contacts.length !== 1 && 's'}
+                  <Header.Subheader>
+                    {isFilterActive ? `(${visibleContacts.length} in filter)` : ''}
+                  </Header.Subheader>
                 </Header>
                 <div>
                   <Button primary icon="plus" labelPosition="right" content="New contact" />
                 </div>
               </div>
               {contacts.length > 0 && (
-                <Table selectable size="small" compact basic="very">
+                <Table selectable stackable size="small" compact>
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell width={3}>
-                        <FilterInput
-                          field="name"
-                          onChange={this.handleFilterChange}
-                          placeholder="Name"
-                        />
-                        <Icon name="sort" />
+                        <div style={{ display: 'flex' }}>
+                          <div style={{ flex: 1 }}>
+                            <FilterInput
+                              field="name"
+                              onChange={this.handleFilterChange}
+                              placeholder="Name"
+                            />
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Icon name="sort" size="large" />
+                          </div>
+                        </div>
                       </Table.HeaderCell>
                       <Table.HeaderCell width={2}>
-                        <FilterInput
-                          field="phone_number"
-                          onChange={this.handleFilterChange}
-                          placeholder="Phone"
-                        />
-                        <Icon name="sort" />
+                        <div style={{ display: 'flex' }}>
+                          <div style={{ flex: 1 }}>
+                            <FilterInput
+                              field="phone_number"
+                              onChange={this.handleFilterChange}
+                              placeholder="Phone"
+                            />
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Icon name="sort" size="large" />
+                          </div>
+                      </div>
                       </Table.HeaderCell>
                       <Table.HeaderCell width={5}>
-                        <FilterInput
-                          field="address"
-                          onChange={this.handleFilterChange}
-                          placeholder="Address"
-                        />
-                        <Icon name="sort" />
+                        <div style={{ display: 'flex' }}>
+                          <div style={{ flex: 1 }}>
+                            <FilterInput
+                              field="address"
+                              onChange={this.handleFilterChange}
+                              placeholder="Address"
+                            />
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Icon name="sort" size="large" />
+                          </div>
+                        </div>
                       </Table.HeaderCell>
                       <Table.HeaderCell width={1}>&nbsp;</Table.HeaderCell>
                     </Table.Row>

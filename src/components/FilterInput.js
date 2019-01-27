@@ -10,7 +10,7 @@ class FilterInput extends Component {
 
   render() {
     const { placeholder } = this.props
-    return <Input size="small" placeholder={placeholder} onChange={this.handleChange} />
+    return <Input fluid size="small" placeholder={placeholder} onChange={this.handleChange} />
   }
 }
 
