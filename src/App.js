@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { Container, Header, Segment, Message, Table, Button, Icon, Input, List } from 'semantic-ui-react'
 import axios from 'axios'
-
 import 'semantic-ui-css/semantic.min.css'
+
+import ContactRow from './components/ContactRow'
 
 class App extends Component {
   state = {
@@ -37,7 +38,7 @@ class App extends Component {
         <List bulleted>
           <List.Item>By <a href="https://twitter.com/simon_ansell" target="_blank" rel="noopener noreferrer">Simon Ansell</a> for <a href="https://www.hackajob.co" target="_blank" rel="noopener noreferrer">hackajob</a></List.Item>
           <List.Item>Type in the inputs to filter</List.Item>
-          <List.Item>Mouseover a contact to reveal edit and delete actions</List.Item>
+          <List.Item>Mouseover a contact to reveal edit and delete actions, or click on a contact to edit.</List.Item>
         </List>
         <Segment loading={!isLoaded}>
           {error && <Message error>Something went wrong: {error}</Message>}
@@ -58,17 +59,7 @@ class App extends Component {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {contacts.map((c, i) => (
-                      <Table.Row key={i}>
-                        <Table.Cell>{c.name}</Table.Cell>
-                        <Table.Cell>{c.phone_number}</Table.Cell>
-                        <Table.Cell>{c.address}</Table.Cell>
-                        <Table.Cell>
-                          <Button basic size="mini" color="blue">edit</Button>
-                          <Button basic size="mini" color="red">delete</Button>
-                        </Table.Cell>
-                      </Table.Row>
-                    ))}
+                    {contacts.map((c, i) => <ContactRow key={i} contact={c} />)}
                   </Table.Body>
                 </Table>
               )}
@@ -76,8 +67,8 @@ class App extends Component {
           )}
         </Segment>
       </Container>
-    );
+    )
   }
 }
 
-export default App;
+export default App
