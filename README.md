@@ -1,17 +1,35 @@
-Requirement
+## Instructions
+
+To run in dev mode:
+
+`yarn install`
+`yarn dev`
+
+To run in production mode
+
+`yarn install`
+`yarn build`
+`yarn start`
+
+Or alternatively see the full Create React App documentation below.
+
+## Notes
+
+- [Semantic UI React](https://react.semantic-ui.com) is used for the UI.
+
+### Requirement
+
 Your task is to build a single page application that will play the role of a phone book.
 
+### Requirements
 
-## Requirements
+- Use this api to get the data you need: http://www.mocky.io/v2/581335f71000004204abaf83
 
-- use this api to get the data you need: http://www.mocky.io/v2/581335f71000004204abaf83
+- The app needs to allow the user to create, edit or delete a contact (in a stateless mode, not permanently)
 
-- the app needs to allow the user to create, edit or delete a contact (in a stateless mode, not permanently)
+- You need to display all the contacts and add basic filters for searching and sorting
 
-- you need to display all the contacts and add basic filters for searching and sorting
-
-please describe in a readme file how to run your application
-
+Please describe in a readme file how to run your application.
 
 We strongly recommend you use frameworks to solve the challenge if you added frameworks to your hackajob profile.
 
