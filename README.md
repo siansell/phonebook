@@ -1,3 +1,7 @@
+## Live example
+
+[TODO deployment]
+
 ## Instructions
 
 To run in dev mode:
@@ -5,13 +9,21 @@ To run in dev mode:
 `yarn install`\
 `yarn dev`
 
-To run in production mode
+To run in production mode:
 
 `yarn install`\
 `yarn build`\
 `yarn start`
 
-Or alternatively see the full Create React App documentation below.
+Or, use NPM if you prefer :shrug:.
+
+See the full Create React App documentation below.
+
+## Possible improvements
+
+- Layout for small screens (mobile) + handle press events
+- Persistent storage
+- Pagination
 
 ## Notes
 
