@@ -20,7 +20,11 @@ class App extends Component {
     visibleContacts: [],
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.loadContacts()
+  }
+
+  loadContacts = async () => {
     try {
       const response = await axios.get('http://www.mocky.io/v2/581335f71000004204abaf83')
       const contactsWithId = response.data.contacts.map((c, i) => ({
@@ -93,7 +97,7 @@ class App extends Component {
                   nContacts={contacts.length}
                   nVisibleContacts={visibleContacts.length}
                 />
-                <div>
+                <div> {/* wrapping div is required so button does not take height of flex parent. */}
                   <Button primary icon="plus" labelPosition="right" content="New contact" />
                 </div>
               </div>
