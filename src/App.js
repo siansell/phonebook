@@ -5,6 +5,7 @@ import 'semantic-ui-css/semantic.min.css'
 
 import ColumnHeader from './components/ColumnHeader'
 import ContactRow from './components/ContactRow'
+import TableHeader from './components/TableHeader'
 
 class App extends Component {
   state = {
@@ -87,13 +88,11 @@ class App extends Component {
           {!error && contacts && (
             <>
               <div style={{ display:'flex', width: '100%' }}>
-                <Header as="h2" style={{ flex: 1, marginBottom: 0, minHeight: 50 }}>
-                  {contacts.length} contact
-                  {contacts.length !== 1 && 's'}
-                  <Header.Subheader>
-                    {isFilterActive ? `(${visibleContacts.length} in filter)` : ''}
-                  </Header.Subheader>
-                </Header>
+                <TableHeader
+                  isFilterActive={isFilterActive}
+                  nContacts={contacts.length}
+                  nVisibleContacts={visibleContacts.length}
+                />
                 <div>
                   <Button primary icon="plus" labelPosition="right" content="New contact" />
                 </div>
