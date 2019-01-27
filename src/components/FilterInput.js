@@ -15,11 +15,7 @@ class FilterInput extends Component {
 }
 
 FilterInput.propTypes = {
-  field: PropTypes.oneOf([
-    'name',
-    'address',
-    'phone_number',
-  ]).isRequired,
+  field: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string.isRequired,
 }

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Container, Header, Segment, Message, Table, Button, Icon, List } from 'semantic-ui-react'
+import { Container, Header, Segment, Message, Table, Button, List } from 'semantic-ui-react'
 import axios from 'axios'
 import 'semantic-ui-css/semantic.min.css'
 
+import ColumnHeader from './components/ColumnHeader'
 import ContactRow from './components/ContactRow'
-import FilterInput from './components/FilterInput'
 
 class App extends Component {
   state = {
@@ -103,46 +103,25 @@ class App extends Component {
                   <Table.Header>
                     <Table.Row>
                       <Table.HeaderCell width={3}>
-                        <div style={{ display: 'flex' }}>
-                          <div style={{ flex: 1 }}>
-                            <FilterInput
-                              field="name"
-                              onChange={this.handleFilterChange}
-                              placeholder="Name"
-                            />
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Icon name="sort" size="large" />
-                          </div>
-                        </div>
+                        <ColumnHeader
+                          field="name"
+                          handleFilterChange={this.handleFilterChange}
+                          title="Name"
+                        />
                       </Table.HeaderCell>
                       <Table.HeaderCell width={2}>
-                        <div style={{ display: 'flex' }}>
-                          <div style={{ flex: 1 }}>
-                            <FilterInput
-                              field="phone_number"
-                              onChange={this.handleFilterChange}
-                              placeholder="Phone"
-                            />
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Icon name="sort" size="large" />
-                          </div>
-                      </div>
+                        <ColumnHeader
+                          field="phone_number"
+                          handleFilterChange={this.handleFilterChange}
+                          title="Phone"
+                        />
                       </Table.HeaderCell>
                       <Table.HeaderCell width={5}>
-                        <div style={{ display: 'flex' }}>
-                          <div style={{ flex: 1 }}>
-                            <FilterInput
-                              field="address"
-                              onChange={this.handleFilterChange}
-                              placeholder="Address"
-                            />
-                          </div>
-                          <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Icon name="sort" size="large" />
-                          </div>
-                        </div>
+                        <ColumnHeader
+                          field="address"
+                          handleFilterChange={this.handleFilterChange}
+                          title="Address"
+                        />
                       </Table.HeaderCell>
                       <Table.HeaderCell width={1}>&nbsp;</Table.HeaderCell>
                     </Table.Row>
