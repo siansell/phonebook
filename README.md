@@ -26,6 +26,17 @@ Full Create React App README is below the horizontal rule.
 - Pagination
 - Form validation (add/edit contact)
 - Could use a state management library such as Redux but not necessary for current level of complexity
+- Could abstract the column field names into state and map over them everywhere:
+```js
+this.state = {
+  fields: [
+    { name: 'name', filter: '', sortDirection: 'ASC', sortPrecedence: 2, columnWidth: 3 },
+    { name: 'address', filter: '', sortDirection: 'DESC', sortPrecedence: 1, columnWidth: 2 },
+    { name: 'phone_number', filter: '', sortDirection: null, columnWidth: 5 },
+  ]
+}
+```
+etc. but it's completely unnecessary with only three fields. We're not writing a spreadsheet...
 
 ## Notes
 

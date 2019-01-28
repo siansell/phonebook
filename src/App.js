@@ -7,7 +7,7 @@ import AppHeader from './components/AppHeader'
 import AppNotes from './components/AppNotes'
 import AppTitle from './components/AppTitle'
 import ContactRow from './components/ContactRow'
-import TableHeader from './components/TableHeader'
+import ColumnHeaders from './components/ColumnHeaders'
 
 class App extends Component {
   state = {
@@ -15,11 +15,11 @@ class App extends Component {
     error: false,
     filters: {
       name: '',
-      phone_number: '',
-      address: ''
+      address: '',
+      phone_number: ''
     },
     isLoaded: false,
-    sorts: [], // an array of objects { field, direction }
+    sorts: [], // an array of objects { field, direction }. It's an array to support possible future enhancement of sorting by multiple columns.
     visibleContacts: [], // filtered contacts
   }
 
@@ -78,8 +78,38 @@ class App extends Component {
   }
 
   handleSort = (field) => {
-    const { sorts } = this.state
-    console.log(sorts, field)
+    this.setState(state => {
+      const { sorts } = state
+      const currentSort = sorts.find(f => f.field === field)
+      let newSort
+      if (currentSort) {
+        newSort = { field, direction: currentSort.direction === 'ASC' ? 'DESC' : 'ASC'}
+      } else {
+        newSort = { field, direction: 'DESC'}
+      }
+
+      return {
+        sorts: [
+          newSort,
+          // Sorting by multiple columns would work like this, but I'm not implementing it now:
+          // ...state.sorts.filter(f => f.field !== field),
+        ],
+      }
+    }, () => {
+      // ok, ok, we'll implement sort by multiple columns. even though there's only one item in the array :)
+      const { visibleContacts, sorts } = this.state
+      const sortedVisibleContacts = visibleContacts.sort((a, b) => {
+        let result = 0
+        sorts.forEach(s => {
+          if (s.direction === 'ASC') result = a[s.field] < b[s.field] ? 1 : -1
+          if (s.direction === 'DESC') result = a[s.field] > b[s.field] ? 1 : -1
+        })
+        return result
+      })
+      this.setState({
+        visibleContacts: sortedVisibleContacts,
+      })
+    })
   }
 
   render() {
@@ -107,7 +137,8 @@ class App extends Component {
               </div>
               {contacts.length > 0 && (
                 <Table selectable stackable size="small" compact>
-                  <TableHeader
+                  <ColumnHeaders
+                    filters={filters}
                     handleFilterChange={this.handleFilterChange}
                     handleSort={this.handleSort}
                     sorts={sorts}
