@@ -33,7 +33,7 @@ class App extends Component {
 
   loadContacts = async () => {
     try {
-      const response = await axios.get('http://www.mocky.io/v2/581335f71000004204abaf83')
+      const response = await axios.get('https://www.mocky.io/v2/581335f71000004204abaf83')
       const contactsWithId = response.data.contacts.map((c, i) => ({
         ...c,
         id: i + 1,
