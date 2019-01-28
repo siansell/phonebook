@@ -153,7 +153,7 @@ class App extends Component {
     const isFilterActive = Object.keys(filters).some(f => filters[f].length > 0)
 
     return (
-      <Container style={{ margin: '1rem' }}>
+      <Container text style={{ margin: '1rem' }}>
         <AppTitle />
         <AppNotes />
         {error && <Message error>Something went wrong: {error}</Message>}
