@@ -82,8 +82,9 @@ class ContactDetailForm extends Component {
             />
           </Form.Group>
           <Form.Group>
-            <Button onClick={handleCancel}>Cancel</Button>
-            <Button type="submit" primary onClick={this.handleSave}>{contact ? 'Save' : 'Add'}</Button>
+            {/* https://stackoverflow.com/questions/50489891/semantic-ui-react-input-field-auto-submit-triggers-wrong-behavior */}
+            <Button type="reset" onClick={handleCancel}>Cancel</Button>
+            <Button type="submit" onClick={this.handleSave} primary>{contact ? 'Save' : 'Add'}</Button>
           </Form.Group>
         </Form>
       </>
