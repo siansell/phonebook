@@ -92,14 +92,15 @@ class App extends Component {
         sorts: [
           newSort,
           // Sorting by multiple columns would work like this, but I'm not implementing it now:
+          // Need to think how it works in the UI, that's why it's left out for now
           // ...state.sorts.filter(f => f.field !== field),
         ],
       }
     }, () => {
-      // ok, ok, we'll implement sort by multiple columns. even though there's only one item in the array :)
       const { visibleContacts, sorts } = this.state
       const sortedVisibleContacts = visibleContacts.sort((a, b) => {
         let result = 0
+        // Yes I know there's only one item in the sorts array
         sorts.forEach(s => {
           if (s.direction === 'ASC') result = a[s.field] < b[s.field] ? 1 : -1
           if (s.direction === 'DESC') result = a[s.field] > b[s.field] ? 1 : -1
