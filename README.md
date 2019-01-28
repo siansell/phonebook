@@ -24,7 +24,6 @@ Full Create React App README is below the horizontal rule.
 - Layout for small screens (mobile) + handle press events
 - Persistent storage
 - Pagination
-- Form validation (add/edit contact)
 - Could use a state management library such as Redux but not necessary for current level of complexity
 - Could write tests but heh
 - Could abstract the column field names into state and map over them everywhere:

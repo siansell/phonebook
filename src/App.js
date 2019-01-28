@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Container, Segment, Message, Table, Button } from 'semantic-ui-react'
 import axios from 'axios'
 import 'semantic-ui-css/semantic.min.css'
+import maxBy from 'lodash/maxBy'
 
 import AppHeader from './components/AppHeader'
 import AppNotes from './components/AppNotes'
@@ -35,7 +36,7 @@ class App extends Component {
       const response = await axios.get('http://www.mocky.io/v2/581335f71000004204abaf83')
       const contactsWithId = response.data.contacts.map((c, i) => ({
         ...c,
-        id: i,
+        id: i + 1,
       }))
       this.setState({
         contacts: contactsWithId,
@@ -77,11 +78,36 @@ class App extends Component {
     })
   }
 
-  handleEditSave = () => {
-    // TODO
-    this.setState({
-      mode: 'list',
-      selectedContact: null,
+  handleEditSave = (contact) => {
+    this.setState(state => {
+      let index // where in the list should we insert, or update
+      let visibleIndex // need to do the same for visible
+      if (!contact.id) { // Add contact case
+        contact.id = state.contacts.length ? maxBy(state.contacts, 'id').id + 1 : 1
+        index = state.contacts.length
+        visibleIndex = state.visibleContacts.length
+      } else {
+        index = state.contacts.findIndex(c => c.id === contact.id)
+        visibleIndex = state.visibleContacts.findIndex(c => c.id === contact.id)
+      }
+
+      return {
+        contacts: [
+          ...state.contacts.slice(0, index),
+          contact,
+          ...state.contacts.slice(index + 1)
+        ],
+        visibleContacts: [
+          ...state.visibleContacts.slice(0, visibleIndex),
+          contact,
+          ...state.visibleContacts.slice(visibleIndex + 1)
+        ],
+        mode: 'list',
+        selectedContact: null,
+      }
+    }, () => {
+      this.applyFilters()
+      this.applySorts()
     })
   }
 
@@ -94,18 +120,22 @@ class App extends Component {
         [field]: effectiveValue.toLowerCase(),
       },
     }), () => {
-      this.setState(state => ({
-        visibleContacts: state.contacts.filter(c => {
-          let isVisible = true
-          Object.keys(state.filters).forEach(f => {
-            if (state.filters[f].length && !c[f].trim().toLowerCase().includes(state.filters[f])) {
-              isVisible = false
-            }
-          })
-          return isVisible
-        })
-      }))
+      this.applyFilters()
     })
+  }
+
+  applyFilters = () => {
+    this.setState(state => ({
+      visibleContacts: state.contacts.filter(c => {
+        let isVisible = true
+        Object.keys(state.filters).forEach(f => {
+          if (state.filters[f].length && !c[f].trim().toLowerCase().includes(state.filters[f])) {
+            isVisible = false
+          }
+        })
+        return isVisible
+      })
+    }))
   }
 
   handleSort = (field) => {
@@ -128,19 +158,23 @@ class App extends Component {
         ],
       }
     }, () => {
-      const { visibleContacts, sorts } = this.state
-      const sortedVisibleContacts = visibleContacts.sort((a, b) => {
-        let result = 0
-        // Yes I know there's only one item in the sorts array
-        sorts.forEach(s => {
-          if (s.direction === 'ASC') result = a[s.field] < b[s.field] ? 1 : -1
-          if (s.direction === 'DESC') result = a[s.field] > b[s.field] ? 1 : -1
-        })
-        return result
+      this.applySorts()
+    })
+  }
+
+  applySorts = () => {
+    const { visibleContacts, sorts } = this.state
+    const sortedVisibleContacts = visibleContacts.sort((a, b) => {
+      let result = 0
+      // Yes I know there's only one item in the sorts array
+      sorts.forEach(s => {
+        if (s.direction === 'ASC') result = a[s.field].trim().toLowerCase() < b[s.field].trim().toLowerCase() ? 1 : -1
+        if (s.direction === 'DESC') result = a[s.field].trim().toLowerCase() > b[s.field].trim().toLowerCase() ? 1 : -1
       })
-      this.setState({
-        visibleContacts: sortedVisibleContacts,
-      })
+      return result
+    })
+    this.setState({
+      visibleContacts: sortedVisibleContacts,
     })
   }
 
@@ -208,7 +242,7 @@ class App extends Component {
             <ContactDetailForm
               contact={selectedContact}
               handleCancel={this.handleEditCancel}
-              handleSave={this.handleEditSave}
+              handleSaveContact={this.handleEditSave}
             />
           </Segment>
         )}
@@ -216,7 +250,7 @@ class App extends Component {
           <Segment>
             <ContactDetailForm
               handleCancel={this.handleEditCancel}
-              handleSave={this.handleEditSave}
+              handleSaveContact={this.handleEditSave}
             />
           </Segment>
         )}
