@@ -4,16 +4,19 @@ import { Table } from 'semantic-ui-react'
 
 import ColumnHeader from './ColumnHeader'
 
-const ColumnHeaders = ({ handleSort, handleFilterChange, sorts }) => {
+const ColumnHeaders = ({ filters, handleSort, handleFilterChange, sorts }) => {
   // This could be abstracted if we pass in [fields], see README
   const nameSort = sorts.find(s => s.field === 'name')
   const nameSortDirection = nameSort ? nameSort.direction : null
+  const nameFilter = filters.name
 
   const phoneSort = sorts.find(s => s.field === 'phone_number')
   const phoneSortDirection = phoneSort ? phoneSort.direction : null
+  const phoneFilter = filters.phone_number
 
   const addressSort = sorts.find(s => s.field === 'address')
   const addressSortDirection = addressSort ? addressSort.direction : null
+  const addressFilter = filters.address
 
   return (
     <Table.Header>
@@ -22,6 +25,7 @@ const ColumnHeaders = ({ handleSort, handleFilterChange, sorts }) => {
           <ColumnHeader
             currentSortDirection={nameSortDirection}
             field="name"
+            filterValue={nameFilter}
             handleFilterChange={handleFilterChange}
             handleSort={handleSort}
             title="Name"
@@ -31,6 +35,7 @@ const ColumnHeaders = ({ handleSort, handleFilterChange, sorts }) => {
           <ColumnHeader
             currentSortDirection={phoneSortDirection}
             field="phone_number"
+            filterValue={phoneFilter}
             handleFilterChange={handleFilterChange}
             handleSort={handleSort}
             title="Phone"
@@ -40,6 +45,7 @@ const ColumnHeaders = ({ handleSort, handleFilterChange, sorts }) => {
           <ColumnHeader
             currentSortDirection={addressSortDirection}
             field="address"
+            filterValue={addressFilter}
             handleFilterChange={handleFilterChange}
             handleSort={handleSort}
             title="Address"
@@ -52,6 +58,7 @@ const ColumnHeaders = ({ handleSort, handleFilterChange, sorts }) => {
 }
 
 ColumnHeaders.propTypes = {
+  filters: PropTypes.object.isRequired,
   handleFilterChange: PropTypes.func.isRequired,
   handleSort: PropTypes.func.isRequired,
   sorts: PropTypes.arrayOf(PropTypes.object).isRequired,

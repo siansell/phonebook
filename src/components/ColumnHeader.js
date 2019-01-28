@@ -11,7 +11,7 @@ class ColumnHeader extends Component {
   }
 
   render() {
-    const { field, handleFilterChange, title, currentSortDirection } = this.props
+    const { field, filterValue, handleFilterChange, title, currentSortDirection } = this.props
 
     let sortIconName
     switch (currentSortDirection) {
@@ -29,6 +29,7 @@ class ColumnHeader extends Component {
       <div style={{ display: 'flex' }}>
         <div style={{ flex: 1 }}>
           <FilterInput
+            defaultValue={filterValue}
             field={field}
             onChange={handleFilterChange}
             placeholder={title}
@@ -55,6 +56,7 @@ ColumnHeader.propTypes = {
     'DESC',
   ]),
   field: PropTypes.string.isRequired,
+  filterValue: PropTypes.string.isRequired,
   handleFilterChange: PropTypes.func.isRequired,
   handleSort: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,

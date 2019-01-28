@@ -11,9 +11,14 @@ class ContactRow extends Component {
   handleConfirmDeleteContact = () => this.setState({ isConfirmDeleteOpen: true })
 
   handleDeleteContact = () => {
-    const { contact: { id } } = this.props
-    this.props.handleDelete(id)
+    const { contact } = this.props
+    this.props.handleDelete(contact)
     this.handleCloseConfirmDelete()
+  }
+
+  handleEditContact = () => {
+    const { contact } = this.props
+    this.props.handleEdit(contact)
   }
 
   handleCloseConfirmDelete = () => this.setState({ isConfirmDeleteOpen: false })
@@ -40,15 +45,12 @@ class ContactRow extends Component {
           onMouseLeave={this.handleMouseLeave}
           style={{ cursor: 'pointer' }}
         >
-          <Table.Cell>{name}</Table.Cell>
-          <Table.Cell>{phone_number}</Table.Cell>
-          <Table.Cell>{address}</Table.Cell>
-          <Table.Cell>
+          <Table.Cell onClick={this.handleEditContact}>{name}</Table.Cell>
+          <Table.Cell onClick={this.handleEditContact}>{phone_number}</Table.Cell>
+          <Table.Cell onClick={this.handleEditContact}>{address}</Table.Cell>
+          <Table.Cell textAlign="right">
             {isSelected && (
-              <>
-                <Icon name="edit" color="blue" />
-                <Icon name="delete" color="red" onClick={this.handleConfirmDeleteContact} />
-              </>
+              <Icon name="delete" color="red" onClick={this.handleConfirmDeleteContact} />
             )}
           </Table.Cell>
         </Table.Row>
@@ -66,6 +68,7 @@ class ContactRow extends Component {
 ContactRow.propTypes = {
   contact: PropTypes.object.isRequired,
   handleDelete: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func.isRequired,
 }
 
 export default ContactRow

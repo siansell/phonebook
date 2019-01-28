@@ -6,6 +6,7 @@ import 'semantic-ui-css/semantic.min.css'
 import AppHeader from './components/AppHeader'
 import AppNotes from './components/AppNotes'
 import AppTitle from './components/AppTitle'
+import ContactDetailForm from './components/ContactDetailForm'
 import ContactRow from './components/ContactRow'
 import ColumnHeaders from './components/ColumnHeaders'
 
@@ -19,7 +20,9 @@ class App extends Component {
       phone_number: ''
     },
     isLoaded: false,
-    sorts: [], // an array of objects { field, direction }. It's an array to support possible future enhancement of sorting by multiple columns.
+    mode: 'list', // 'list', 'add' or 'edit'
+    selectedContact: null, // the contact currently being edited
+    sorts: [], // [{ field, direction }]. It's an array to support possible future enhancement of sorting by multiple columns.
     visibleContacts: [], // filtered contacts
   }
 
@@ -47,11 +50,39 @@ class App extends Component {
     }
   }
 
-  handleDeleteContact = (id) => {
+  handleDeleteContact = (contact) => {
     this.setState(state => ({
-      contacts: state.contacts.filter(c => c.id !== id),
-      visibleContacts: state.visibleContacts.filter(c => c.id !== id)
+      contacts: state.contacts.filter(c => c.id !== contact.id),
+      visibleContacts: state.visibleContacts.filter(c => c.id !== contact.id)
     }))
+  }
+
+  handleAddContact = () => {
+    this.setState({
+      mode: 'add',
+    })
+  }
+
+  handleEditContact = (contact) => {
+    this.setState({
+      mode: 'edit',
+      selectedContact: contact,
+    })
+  }
+
+  handleEditCancel = () => {
+    this.setState({
+      mode: 'list',
+      selectedContact: null,
+    })
+  }
+
+  handleEditSave = () => {
+    // TODO
+    this.setState({
+      mode: 'list',
+      selectedContact: null,
+    })
   }
 
   handleFilterChange = (field, value) => {
@@ -114,7 +145,10 @@ class App extends Component {
   }
 
   render() {
-    const { contacts, visibleContacts, filters, error, isLoaded, sorts } = this.state
+    const {
+      contacts, visibleContacts, filters, error,
+      selectedContact, isLoaded, sorts, mode,
+    } = this.state
 
     const isFilterActive = Object.keys(filters).some(f => filters[f].length > 0)
 
@@ -122,44 +156,70 @@ class App extends Component {
       <Container style={{ margin: '1rem' }}>
         <AppTitle />
         <AppNotes />
-        <Segment loading={!isLoaded}>
-          {error && <Message error>Something went wrong: {error}</Message>}
-          {!error && contacts && (
-            <>
-              <div style={{ display:'flex', width: '100%' }}>
-                <AppHeader
-                  isFilterActive={isFilterActive}
-                  nContacts={contacts.length}
-                  nVisibleContacts={visibleContacts.length}
-                />
-                <div> {/* wrapping div is required so button does not take height of flex parent. */}
-                  <Button primary icon="plus" labelPosition="right" content="New contact" />
-                </div>
-              </div>
-              {contacts.length > 0 && (
-                <Table selectable stackable size="small" compact>
-                  <ColumnHeaders
-                    filters={filters}
-                    handleFilterChange={this.handleFilterChange}
-                    handleSort={this.handleSort}
-                    sorts={sorts}
+        {error && <Message error>Something went wrong: {error}</Message>}
+        {!error && mode === 'list' && (
+          <Segment loading={!isLoaded}>
+            {contacts && (
+              <>
+                <div style={{ display:'flex', width: '100%' }}>
+                  <AppHeader
+                    isFilterActive={isFilterActive}
+                    nContacts={contacts.length}
+                    nVisibleContacts={visibleContacts.length}
                   />
-                  {visibleContacts.length > 0 && (
-                    <Table.Body>
-                      {visibleContacts.map((c, i) => (
-                        <ContactRow
-                          key={i}
-                          contact={c}
-                          handleDelete={this.handleDeleteContact}
-                        />
-                      ))}
-                    </Table.Body>
-                  )}
-                </Table>
-              )}
-            </>
-          )}
-        </Segment>
+                  <div> {/* wrapping div is required so button does not take height of flex parent. */}
+                    <Button
+                      content="New contact"
+                      icon="plus"
+                      onClick={this.handleAddContact}
+                      primary
+                      labelPosition="right"
+                    />
+                  </div>
+                </div>
+                {contacts.length > 0 && (
+                  <Table selectable stackable size="small" compact>
+                    <ColumnHeaders
+                      filters={filters}
+                      handleFilterChange={this.handleFilterChange}
+                      handleSort={this.handleSort}
+                      sorts={sorts}
+                    />
+                    {visibleContacts.length > 0 && (
+                      <Table.Body>
+                        {visibleContacts.map((c, i) => (
+                          <ContactRow
+                            key={i}
+                            contact={c}
+                            handleDelete={this.handleDeleteContact}
+                            handleEdit={this.handleEditContact}
+                          />
+                        ))}
+                      </Table.Body>
+                    )}
+                  </Table>
+                )}
+              </>
+            )}
+          </Segment>
+        )}
+        {!error && mode === 'edit' && (
+          <Segment>
+            <ContactDetailForm
+              contact={selectedContact}
+              handleCancel={this.handleEditCancel}
+              handleSave={this.handleEditSave}
+            />
+          </Segment>
+        )}
+        {!error && mode === 'add' && (
+          <Segment>
+            <ContactDetailForm
+              handleCancel={this.handleEditCancel}
+              handleSave={this.handleEditSave}
+            />
+          </Segment>
+        )}
       </Container>
     )
   }
